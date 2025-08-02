@@ -66,7 +66,7 @@ def load_training_data(filename: str, print_err: bool = False) -> list[tuple[Hex
                 results = []
                 for res in result_str.split(','):
                     idx, line_no, pos_no = map(int, res.split(':'))
-                    results.append((idx, Hex(int(line_no), int(pos_no))))
+                    results.append((idx, Hex.hex(int(line_no), int(pos_no))))
                 dataset.append((engine, queue, results))
     except IOError as e:
         if print_err:
