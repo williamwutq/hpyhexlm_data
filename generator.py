@@ -105,12 +105,14 @@ def generate_training_data(num_samples: int, algorithm, filename: str = "",
                 break
             # Make the first best move
             piece_index, coord = best_moves[0]
+            copy_engine = game._engine.__copy__()
+            copy_queue = game._queue.copy()
             if not game.add_piece(piece_index, coord):
                 break
             # Collect the engine, queue, and best options
             if random() > move_dropout:
                 # Only add the data if the move is not dropped
-                inner_data.append((game._engine.__copy__(), game._queue.copy(), best_moves))
+                inner_data.append((copy_engine, copy_queue, best_moves))
         # Strip the last 5% of the game data as it is not meaningful, saving the other 95% to data
         data_len = len(inner_data)
         if data_len > 0:
