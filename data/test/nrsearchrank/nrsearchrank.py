@@ -5,6 +5,9 @@
 # Also named: nrsearcheven, nrsearch
 
 
+'''The nrsearchrank algorithm is provided in this module.'''
+
+
 from hpyhex.hex import HexEngine, Piece, Hex
 from hpyhex.game_env import Game
 
@@ -22,14 +25,14 @@ def nrsearchrank(engine: HexEngine, queue: list[Piece], significant_choices: int
     options = []
     seen_pieces = {}
     for piece_index, piece in enumerate(queue):
-        key = piece.to_byte()
+        key = int(piece)
         if key in seen_pieces: continue
         seen_pieces[key] = piece_index
         for coord in engine.check_positions(piece):
-            score = engine.compute_dense_index(coord, piece) + piece.length()
+            score = engine.compute_dense_index(coord, piece) + len(piece)
             copy_engine = engine.__copy__()
-            copy_engine.add(coord, piece)
-            score += len(copy_engine.eliminate()) / engine._radius
+            copy_engine.add_piece(coord, piece)
+            score += len(copy_engine.eliminate()) / engine.radius
             options.append((piece_index, coord, score))
     sorted_options = sorted(options, key=lambda item: item[2], reverse=True)
     return [(item[0], item[1]) for item in sorted_options[:significant_choices]]
